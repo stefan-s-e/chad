@@ -6,10 +6,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-'''
-timesheet
-punch (in/out)
-man
-select
-'''
