@@ -47,8 +47,9 @@ def HandleCommand(command):
     TakeUserInput()
 
 def HandleMenu():
-    #TODO
-    print()
+    print("\nHelp:")
+    print("m    print this menu")
+    print("q    quit chad\n")
 
 def HandleQuit():
     quit()
