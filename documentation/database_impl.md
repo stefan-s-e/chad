@@ -18,3 +18,13 @@ Ideas:
 - long list (simple, could be tmw to parse, would need to parse the whole thing to build a report)
 - KV database? keys would be days, and values json objects? decent idea, but might be TMW (i.e. a relational DB would be good too but is tmw - maybe SQLLite?)
 - can do a crude KV with the file and json: treat the whole file as a json obj, each obj has a day, jira hours, all the punches, etc.
+
+## final format
+{
+{
+    "day": "DATE",
+    "punches": [time1, time2, time3 ...],
+    "jira_hours": num
+},
+another_day
+}
