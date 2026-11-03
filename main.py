@@ -92,11 +92,12 @@ def HandleJiraLog():
         return
 
     existing_data = {}
+    currDayString = str(datetime.now().date())
 
     with open("db.json", mode="r", encoding="utf-8") as db_file:
         existing_data = json.load(db_file)
 
-    existing_data["jira_logs"].append({"date": str(datetime.now().date()), "hours": float_userInput})
+    existing_data["jira_logs"][currDayString] = existing_data["jira_logs"].get(currDayString, 0) + float_userInput
 
     with open("db.json", mode="w", encoding="utf-8") as db_file:
         json.dump(existing_data, db_file)
@@ -104,7 +105,28 @@ def HandleJiraLog():
     print(f"{float_userInput} Jira hours recorded on {str(datetime.now().date())}\n")
 
 def HandleReport():
-    print()
+    existing_data = {}
+
+    with open("db.json", mode="r", encoding="utf-8") as db_file:
+        existing_data = json.load(db_file)
+    
+    allHoursWorked = computeHoursWorked(existing_data["punches"])
+    allJiraHoursLogged = computeJiraHoursLogged(existing_data["jira_logs"])
+
+    print(f"Hours worked (all time): {allHoursWorked}")
+    print(f"Jira hours logged (all time): {allJiraHoursLogged}\n")
+
+def computeHoursWorked(dateTimeStringList):
+    deltaList = list(map(lambda x: datetime.strptime(x, "%Y-%m-%d %H:%M:%S"), dateTimeStringList))
+    return sum(
+        map(
+            lambda x: x.seconds / 3600, 
+            [item2 - item1 for item1, item2 in zip(deltaList[::2], deltaList[1::2])]
+        )
+    )
+
+def computeJiraHoursLogged(jiraDictList):
+    return sum(jiraDictList.values())
 
 def UpdateBackup():
     shutil.copy("db.json", "db_backup.json")
