@@ -20,6 +20,7 @@ import json
 import shutil
 import os
 from datetime import datetime
+from datetime import date
 
 def main():
     PrintMainMenu()
@@ -113,6 +114,8 @@ def HandleReport():
     allHoursWorked = computeHoursWorked(existing_data["punches"])
     allJiraHoursLogged = computeJiraHoursLogged(existing_data["jira_logs"])
 
+    printWeeks(existing_data["jira_logs"])
+
     print(f"Hours worked (all time): {allHoursWorked}")
     print(f"Jira hours logged (all time): {allJiraHoursLogged}\n")
 
@@ -125,11 +128,19 @@ def computeHoursWorked(dateTimeStringList):
         )
     )
 
-def computeJiraHoursLogged(jiraDictList):
-    return sum(jiraDictList.values())
+def computeJiraHoursLogged(jiraDict):
+    return sum(jiraDict.values())
 
 def UpdateBackup():
     shutil.copy("db.json", "db_backup.json")
+
+def printWeeks(dateDict):
+    emptyDict = {}
+    for i in dateDict.keys():
+        dt = date.strptime(i, "%Y-%m-%d")
+        (yr, wk) = dt.isocalendar()[0:2]
+        emptyDict[(yr, wk)] = emptyDict.get((yr, wk), 0) + dateDict[i]
+    print(emptyDict)
 
 if __name__ == "__main__":
     main()
